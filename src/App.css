@@ -1,0 +1,6 @@
+/* CSS to highlight booked dates */
+.react-calendar__tile.highlighted {
+    background-color: #FF9800 !important; /* Orange background */
+    color: white !important; /* White text color */
+  }
+  

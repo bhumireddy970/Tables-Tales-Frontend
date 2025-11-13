@@ -1,0 +1,34 @@
+{
+  "validUser": {
+    "email": "bhanu@gmail.com",
+    "password": "Bhanu@2005",
+    "role": "ADMIN"
+  },
+  "invalidUsers": {
+    "invalidEmail": {
+      "email": "invalid-email",
+      "password": "password123"
+    },
+    "shortPassword": {
+      "email": "test@example.com",
+      "password": "short"
+    },
+    "missingRole": {
+      "email": "test@example.com",
+      "password": "password123"
+    }
+  },
+  "differentRoles": [
+    {
+      "email": "bhanu@example.com",
+      "password": "Bhanu@2005",
+      "role": "ADMIN"
+    },
+    {
+      "email": "deliveryboy3@gmail.com",
+      "password": "Delivery@yrevileD",
+      "role": "DELIVERYBOY"
+    }
+  ]
+}
+
