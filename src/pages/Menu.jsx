@@ -1,28 +1,31 @@
-
-
-import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../contextAPI/context';
-import { jsPDF } from 'jspdf';
+import React, { useState, useEffect } from "react";
+import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../contextAPI/context";
+import { jsPDF } from "jspdf";
 
 // Import components
-import MenuHeader from './menu/MenuHeader';
-import NavigationDrawer from './menu/NavigationDrawer';
-import SearchResults from './menu/SearchResults';
-import CategoryTabs from './menu/CategoryTabs';
-import OrderDialogs from './menu/OrderDialogs';
+import MenuHeader from "./menu/MenuHeader";
+import NavigationDrawer from "./menu/NavigationDrawer";
+import SearchResults from "./menu/SearchResults";
+import CategoryTabs from "./menu/CategoryTabs";
+import OrderDialogs from "./menu/OrderDialogs";
 
 // Import utility functions
-import { handleLike, handleDislike, handleCartClick, handleOrderSubmit } from './utils/menuUtils';
+import {
+  handleLike,
+  handleDislike,
+  handleCartClick,
+  handleOrderSubmit,
+} from "./utils/menuUtils";
 
 const BACKEND_API_URL = import.meta.env.VITE_BASE_URL;
-console.log(BACKEND_API_URL)
+console.log(BACKEND_API_URL);
 const Menu = () => {
   const navigate = useNavigate();
   const [menuItems, setMenuItems] = useState([]);
   const [filteredMenu, setFilteredMenu] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -42,10 +45,10 @@ const Menu = () => {
           setMenuItems(data);
           setFilteredMenu(data);
         } else {
-          console.error('Failed to fetch menu items');
+          console.error("Failed to fetch menu items");
         }
       } catch (error) {
-        console.error('Error fetching menu items:', error);
+        console.error("Error fetching menu items:", error);
       }
     };
 
@@ -57,9 +60,10 @@ const Menu = () => {
     const query = event.target.value;
     setSearchQuery(query);
 
-    const filteredItems = menuItems.filter(item =>
-      item.name.toLowerCase().includes(query.toLowerCase()) ||
-      item.description.toLowerCase().includes(query.toLowerCase())
+    const filteredItems = menuItems.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.description.toLowerCase().includes(query.toLowerCase())
     );
 
     setFilteredMenu(filteredItems);
@@ -126,7 +130,7 @@ const Menu = () => {
     // Title with customized font and positioning
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
-    doc.text('Table Tales Receipt', 105, 20, null, null, 'center');
+    doc.text("Table Tales Receipt", 105, 20, null, null, "center");
     doc.setFontSize(14);
     doc.setFont("helvetica", "normal");
 
@@ -139,16 +143,17 @@ const Menu = () => {
     doc.line(20, 45, 190, 45);
 
     let yPosition = 55;
-    doc.text('Items:', 20, yPosition);
+    doc.text("Items:", 20, yPosition);
     yPosition += 10;
 
     // Add each item and its price/quantity
     Object.entries(selectedItems).forEach(([menuId, { price, quantity }]) => {
-      const menuName = menuItems.find((item) => item._id === menuId)?.name || 'Unknown Item';
+      const menuName =
+        menuItems.find((item) => item._id === menuId)?.name || "Unknown Item";
 
       doc.setFont("helvetica", "normal");
       doc.text(`${menuName}`, 20, yPosition);
-      doc.text(`₹${price} x ${quantity}`, 140, yPosition, { align: 'right' });
+      doc.text(`₹${price} x ${quantity}`, 140, yPosition, { align: "right" });
       doc.text("🛒", 170, yPosition);
 
       yPosition += 8;
@@ -188,7 +193,7 @@ const Menu = () => {
     doc.text("📜", 170, yPosition - 5);
 
     // Save the generated PDF
-    doc.save('receipt.pdf');
+    doc.save("receipt.pdf");
   };
 
   const calculateTotalAmount = () => {
@@ -212,10 +217,9 @@ const Menu = () => {
   // Handle logout
   const handleLogOut = () => {
     logout(null);
-    logo('CUSTOMER');
-    navigate('/');
+    logo("CUSTOMER");
+    navigate("/");
   };
-
 
   return (
     <>
@@ -230,18 +234,13 @@ const Menu = () => {
         drawerOpen={drawerOpen}
         menuItems={menuItems}
         onDrawerClose={() => setDrawerOpen(false)}
-        onAccountClick={() => navigate('/profile')}
+        onAccountClick={() => navigate("/profile")}
         onLogOut={handleLogOut}
       />
 
-      {
-        searchQuery && (
-          <SearchResults 
-        filteredMenu={filteredMenu} 
-        searchQuery={searchQuery} 
-      />
-        )
-      }
+      {searchQuery && (
+        <SearchResults filteredMenu={filteredMenu} searchQuery={searchQuery} />
+      )}
 
       <CategoryTabs
         menuItems={menuItems}
@@ -252,25 +251,25 @@ const Menu = () => {
       />
 
       <OrderDialogs
-  dialogOpen={dialogOpen}
-  orderDialogOpen={orderDialogOpen}
-  receiptDialogOpen={receiptDialogOpen}
-  menuItems={menuItems}
-  selectedItems={selectedItems}
-  email={email} // Make sure this is passed
-  onDialogClose={() => setDialogOpen(false)}
-  onOrderDialogClose={() => setOrderDialogOpen(false)}
-  onReceiptDialogClose={() => setReceiptDialogOpen(false)}
-  onDialogClick={() => {
-    setDialogOpen(false);
-    setOrderDialogOpen(true);
-  }}
-  onCheckboxChange={handleCheckboxChange}
-  onQuantityChange={handleQuantityChange}
-  onOrderSubmit={handleOrderSubmitClick}
-  onDownloadReceipt={downloadReceipt}
-  onViewReceipt={handleViewReceipt}
-/>
+        dialogOpen={dialogOpen}
+        orderDialogOpen={orderDialogOpen}
+        receiptDialogOpen={receiptDialogOpen}
+        menuItems={menuItems}
+        selectedItems={selectedItems}
+        email={email} // Make sure this is passed
+        onDialogClose={() => setDialogOpen(false)}
+        onOrderDialogClose={() => setOrderDialogOpen(false)}
+        onReceiptDialogClose={() => setReceiptDialogOpen(false)}
+        onDialogClick={() => {
+          setDialogOpen(false);
+          setOrderDialogOpen(true);
+        }}
+        onCheckboxChange={handleCheckboxChange}
+        onQuantityChange={handleQuantityChange}
+        onOrderSubmit={handleOrderSubmitClick}
+        onDownloadReceipt={downloadReceipt}
+        onViewReceipt={handleViewReceipt}
+      />
     </>
   );
 };
