@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -23,8 +22,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Select
-} from '@mui/material';
+  Select,
+} from "@mui/material";
 import {
   DeliveryDining,
   Email,
@@ -33,20 +32,20 @@ import {
   Star,
   CheckCircle,
   PhotoCamera,
-  TwoWheeler
-} from '@mui/icons-material';
-import { useUser } from '../../contextAPI/context';
-import { useNavigate } from 'react-router-dom';
+  TwoWheeler,
+} from "@mui/icons-material";
+import { useUser } from "../../contextAPI/context";
+import { useNavigate } from "react-router-dom";
 
 const BACKEND_API_URL = import.meta.env.VITE_BASE_URL;
 
 const AddDeliveryBoy = () => {
   const [newDeliveryBoy, setNewDeliveryBoy] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    status: 'available',
+    email: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    status: "available",
     rating: 0,
     completedOrders: 0,
     imageURL: null,
@@ -63,53 +62,51 @@ const AddDeliveryBoy = () => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-
-
-  const steps = ['Personal Info', 'Contact Details', 'Work Information'];
+  const steps = ["Personal Info", "Contact Details", "Work Information"];
 
   const validationRules = {
     email: {
       required: true,
-      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     firstName: {
       required: true,
       minLength: 2,
       maxLength: 50,
-      pattern: /^[A-Za-z\s]+$/
+      pattern: /^[A-Za-z\s]+$/,
     },
     lastName: {
       required: true,
       minLength: 1,
       maxLength: 50,
-      pattern: /^[A-Za-z\s]+$/
+      pattern: /^[A-Za-z\s]+$/,
     },
     phone: {
       required: true,
-      pattern: /^\+?[\d\s-()]{10,}$/
+      pattern: /^\+?[\d\s-()]{10,}$/,
     },
     rating: {
       required: true,
       min: 0,
-      max: 5
+      max: 5,
     },
     completedOrders: {
       required: false,
-      min: 0
+      min: 0,
     },
     imageURL: {
-      required: true
-    }
+      required: true,
+    },
   };
 
   const validateField = (name, value) => {
     const rules = validationRules[name];
-    if (!rules) return '';
+    if (!rules) return "";
 
-    let error = '';
+    let error = "";
 
     if (rules.required && !value) {
-      error = 'This field is required';
+      error = "This field is required";
     } else if (rules.minLength && value.length < rules.minLength) {
       error = `Minimum ${rules.minLength} characters required`;
     } else if (rules.maxLength && value.length > rules.maxLength) {
@@ -120,14 +117,14 @@ const AddDeliveryBoy = () => {
       error = `Maximum value is ${rules.max}`;
     } else if (rules.pattern && !rules.pattern.test(value)) {
       switch (name) {
-        case 'email':
-          error = 'Please enter a valid email address';
+        case "email":
+          error = "Please enter a valid email address";
           break;
-        case 'phone':
-          error = 'Please enter a valid phone number';
+        case "phone":
+          error = "Please enter a valid phone number";
           break;
         default:
-          error = 'Invalid format';
+          error = "Invalid format";
       }
     }
 
@@ -136,8 +133,9 @@ const AddDeliveryBoy = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    Object.keys(newDeliveryBoy).forEach(key => {
-      if (key !== 'status') { // status has default value
+    Object.keys(newDeliveryBoy).forEach((key) => {
+      if (key !== "status") {
+        // status has default value
         const error = validateField(key, newDeliveryBoy[key]);
         if (error) newErrors[key] = error;
       }
@@ -148,38 +146,44 @@ const AddDeliveryBoy = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewDeliveryBoy(prev => ({ ...prev, [name]: value }));
+    setNewDeliveryBoy((prev) => ({ ...prev, [name]: value }));
 
     if (touched[name]) {
       const error = validateField(name, value);
-      setErrors(prev => ({ ...prev, [name]: error }));
+      setErrors((prev) => ({ ...prev, [name]: error }));
     }
   };
 
   const handleBlur = (e) => {
     const { name } = e.target;
-    setTouched(prev => ({ ...prev, [name]: true }));
-    
+    setTouched((prev) => ({ ...prev, [name]: true }));
+
     const error = validateField(name, newDeliveryBoy[name]);
-    setErrors(prev => ({ ...prev, [name]: error }));
+    setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
       if (!validTypes.includes(file.type)) {
-        setErrors(prev => ({ ...prev, imageURL: 'Please select a valid image file (JPEG, PNG, WebP)' }));
+        setErrors((prev) => ({
+          ...prev,
+          imageURL: "Please select a valid image file (JPEG, PNG, WebP)",
+        }));
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, imageURL: 'Image size should be less than 5MB' }));
+        setErrors((prev) => ({
+          ...prev,
+          imageURL: "Image size should be less than 5MB",
+        }));
         return;
       }
 
-      setNewDeliveryBoy(prev => ({ ...prev, imageURL: file }));
-      setErrors(prev => ({ ...prev, imageURL: '' }));
+      setNewDeliveryBoy((prev) => ({ ...prev, imageURL: file }));
+      setErrors((prev) => ({ ...prev, imageURL: "" }));
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -193,29 +197,31 @@ const AddDeliveryBoy = () => {
     let stepFields = [];
     switch (activeStep) {
       case 0:
-        stepFields = ['firstName', 'lastName'];
+        stepFields = ["firstName", "lastName"];
         break;
       case 1:
-        stepFields = ['email', 'phone'];
+        stepFields = ["email", "phone"];
         break;
       case 2:
-        stepFields = ['rating', 'imageURL'];
+        stepFields = ["rating", "imageURL"];
         break;
       default:
         stepFields = [];
     }
 
     const stepErrors = {};
-    stepFields.forEach(field => {
+    stepFields.forEach((field) => {
       const error = validateField(field, newDeliveryBoy[field]);
       if (error) stepErrors[field] = error;
     });
 
     if (Object.keys(stepErrors).length > 0) {
-      setErrors(prev => ({ ...prev, ...stepErrors }));
+      setErrors((prev) => ({ ...prev, ...stepErrors }));
       const newTouched = {};
-      stepFields.forEach(field => { newTouched[field] = true; });
-      setTouched(prev => ({ ...prev, ...newTouched }));
+      stepFields.forEach((field) => {
+        newTouched[field] = true;
+      });
+      setTouched((prev) => ({ ...prev, ...newTouched }));
       return;
     }
 
@@ -228,10 +234,10 @@ const AddDeliveryBoy = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const allTouched = {};
-    Object.keys(newDeliveryBoy).forEach(key => { 
-      if (key !== 'status') allTouched[key] = true; 
+    Object.keys(newDeliveryBoy).forEach((key) => {
+      if (key !== "status") allTouched[key] = true;
     });
     setTouched(allTouched);
 
@@ -242,33 +248,36 @@ const AddDeliveryBoy = () => {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append('email', newDeliveryBoy.email);
-    formData.append('firstName', newDeliveryBoy.firstName);
-    formData.append('lastName', newDeliveryBoy.lastName);
-    formData.append('phone', newDeliveryBoy.phone);
-    formData.append('status', newDeliveryBoy.status);
-    formData.append('rating', newDeliveryBoy.rating.toString());
-    formData.append('completedOrders', newDeliveryBoy.completedOrders.toString());
-    formData.append('imageURL', newDeliveryBoy.imageURL);
+    formData.append("email", newDeliveryBoy.email);
+    formData.append("firstName", newDeliveryBoy.firstName);
+    formData.append("lastName", newDeliveryBoy.lastName);
+    formData.append("phone", newDeliveryBoy.phone);
+    formData.append("status", newDeliveryBoy.status);
+    formData.append("rating", newDeliveryBoy.rating.toString());
+    formData.append(
+      "completedOrders",
+      newDeliveryBoy.completedOrders.toString()
+    );
+    formData.append("imageURL", newDeliveryBoy.imageURL);
 
     try {
       const response = await fetch(`${BACKEND_API_URL}/deliveryboy/add`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Failed to add delivery boy');
+      if (!response.ok) throw new Error("Failed to add delivery boy");
 
       setSuccess(true);
       setLoading(false);
-      
+
       setTimeout(() => {
         setNewDeliveryBoy({
-          email: '',
-          firstName: '',
-          lastName: '',
-          phone: '',
-          status: 'available',
+          email: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          status: "available",
           rating: 0,
           completedOrders: 0,
           imageURL: null,
@@ -279,10 +288,13 @@ const AddDeliveryBoy = () => {
         setErrors({});
         setSuccess(false);
       }, 2000);
-
+      navigate("/signup");
     } catch (error) {
       console.error(error);
-      setErrors(prev => ({ ...prev, submit: 'Failed to add delivery boy. Please try again.' }));
+      setErrors((prev) => ({
+        ...prev,
+        submit: "Failed to add delivery boy. Please try again.",
+      }));
       setLoading(false);
     }
   };
@@ -336,7 +348,7 @@ const AddDeliveryBoy = () => {
             </Grid>
           </Grid>
         );
-      
+
       case 1:
         return (
           <Grid container spacing={3}>
@@ -385,7 +397,7 @@ const AddDeliveryBoy = () => {
             </Grid>
           </Grid>
         );
-      
+
       case 2:
         return (
           <Grid container spacing={3}>
@@ -407,11 +419,11 @@ const AddDeliveryBoy = () => {
                       <Star color="action" />
                     </InputAdornment>
                   ),
-                  inputProps: { 
-                    min: 0, 
+                  inputProps: {
+                    min: 0,
                     max: 5,
-                    step: 0.1
-                  }
+                    step: 0.1,
+                  },
                 }}
               />
             </Grid>
@@ -427,9 +439,9 @@ const AddDeliveryBoy = () => {
                 error={!!errors.completedOrders}
                 helperText={errors.completedOrders}
                 InputProps={{
-                  inputProps: { 
-                    min: 0
-                  }
+                  inputProps: {
+                    min: 0,
+                  },
                 }}
               />
             </Grid>
@@ -449,12 +461,12 @@ const AddDeliveryBoy = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Box sx={{ textAlign: 'center' }}>
+              <Box sx={{ textAlign: "center" }}>
                 <Input
                   type="file"
                   name="imageURL"
                   onChange={handleImageChange}
-                  sx={{ display: 'none' }}
+                  sx={{ display: "none" }}
                   id="delivery-boy-image-upload"
                   required
                 />
@@ -473,7 +485,7 @@ const AddDeliveryBoy = () => {
                     {errors.imageURL}
                   </Typography>
                 )}
-                
+
                 {imagePreview && (
                   <Box sx={{ mt: 2 }}>
                     <Avatar
@@ -481,11 +493,15 @@ const AddDeliveryBoy = () => {
                       sx={{
                         width: 120,
                         height: 120,
-                        mx: 'auto',
-                        border: `3px solid ${theme.palette.primary.main}`
+                        mx: "auto",
+                        border: `3px solid ${theme.palette.primary.main}`,
                       }}
                     />
-                    <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ mt: 1 }}
+                    >
                       Photo Preview
                     </Typography>
                   </Box>
@@ -494,7 +510,7 @@ const AddDeliveryBoy = () => {
             </Grid>
           </Grid>
         );
-      
+
       default:
         return null;
     }
@@ -503,37 +519,40 @@ const AddDeliveryBoy = () => {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.1)} 0%, ${alpha(theme.palette.info.light, 0.1)} 100%)`,
-        py: 4
+        minHeight: "100vh",
+        background: `linear-gradient(135deg, ${alpha(
+          theme.palette.primary.light,
+          0.1
+        )} 0%, ${alpha(theme.palette.info.light, 0.1)} 100%)`,
+        py: 4,
       }}
     >
       <Container maxWidth="md">
         <Card
           sx={{
             borderRadius: 4,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-            overflow: 'visible',
-            background: 'white',
-            mt: 2
+            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+            overflow: "visible",
+            background: "white",
+            mt: 2,
           }}
         >
           <CardContent sx={{ p: 4 }}>
             {/* Header */}
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Box sx={{ textAlign: "center", mb: 4 }}>
               <Box
                 sx={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   width: 80,
                   height: 80,
-                  borderRadius: '50%',
+                  borderRadius: "50%",
                   background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
-                  mb: 2
+                  mb: 2,
                 }}
               >
-                <DeliveryDining sx={{ fontSize: 40, color: 'white' }} />
+                <DeliveryDining sx={{ fontSize: 40, color: "white" }} />
               </Box>
               <Typography variant="h4" fontWeight="bold" gutterBottom>
                 Add Delivery Partner
@@ -545,11 +564,7 @@ const AddDeliveryBoy = () => {
 
             {/* Success Alert */}
             {success && (
-              <Alert 
-                severity="success" 
-                icon={<CheckCircle />}
-                sx={{ mb: 3 }}
-              >
+              <Alert severity="success" icon={<CheckCircle />} sx={{ mb: 3 }}>
                 Delivery partner added successfully!
               </Alert>
             )}
@@ -565,12 +580,16 @@ const AddDeliveryBoy = () => {
 
             <form onSubmit={handleSubmit}>
               {/* Step Content */}
-              <Box sx={{ mb: 4 }}>
-                {getStepContent(activeStep)}
-              </Box>
+              <Box sx={{ mb: 4 }}>{getStepContent(activeStep)}</Box>
 
               {/* Navigation Buttons */}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Button
                   onClick={handleBack}
                   disabled={activeStep === 0}
@@ -579,26 +598,32 @@ const AddDeliveryBoy = () => {
                   Back
                 </Button>
 
-                <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box sx={{ display: "flex", gap: 2 }}>
                   {activeStep === steps.length - 1 ? (
                     <Button
                       type="submit"
                       variant="contained"
                       disabled={loading}
-                      startIcon={loading ? <CircularProgress size={20} /> : <CheckCircle />}
+                      startIcon={
+                        loading ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          <CheckCircle />
+                        )
+                      }
                       sx={{
                         background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
-                        px: 4
+                        px: 4,
                       }}
                     >
-                      {loading ? 'Adding Partner...' : 'Add Delivery Partner'}
+                      {loading ? "Adding Partner..." : "Add Delivery Partner"}
                     </Button>
                   ) : (
                     <Button
                       onClick={handleNext}
                       variant="contained"
                       sx={{
-                        background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`
+                        background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.primary.main} 100%)`,
                       }}
                     >
                       Next
@@ -617,7 +642,7 @@ const AddDeliveryBoy = () => {
 
             {/* Progress Indicator */}
             {loading && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <CircularProgress />
               </Box>
             )}
@@ -630,18 +655,28 @@ const AddDeliveryBoy = () => {
             p: 3,
             mt: 3,
             borderRadius: 3,
-            background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-            border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`
+            background: `linear-gradient(135deg, ${alpha(
+              theme.palette.info.main,
+              0.05
+            )} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+            border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
           }}
         >
-          <Typography variant="h6" gutterBottom fontWeight="bold" color="info.main">
+          <Typography
+            variant="h6"
+            gutterBottom
+            fontWeight="bold"
+            color="info.main"
+          >
             🚀 Delivery Partner Tips
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            • Ensure contact information is accurate and verified<br/>
-            • Use professional profile photos for better customer trust<br/>
-            • Set realistic initial ratings based on experience<br/>
-            • Provide proper onboarding and training materials
+            • Ensure contact information is accurate and verified
+            <br />
+            • Use professional profile photos for better customer trust
+            <br />
+            • Set realistic initial ratings based on experience
+            <br />• Provide proper onboarding and training materials
           </Typography>
         </Paper>
       </Container>

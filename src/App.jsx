@@ -27,7 +27,7 @@ import EventAnalysis from "./pages/CateringOrganisation";
 import Needaccess from "./pages/Needaccess";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrivateRoute from "./components/PrivateRoute";
-
+import DeliveryBoyRoute from "./components/DeliveryBoyRoute";
 function App() {
   return (
     <Router>
@@ -113,9 +113,9 @@ function App() {
           <Route
             path="deliveryboy"
             element={
-              <PrivateRoute requireAdmin={true}>
+              <DeliveryBoyRoute>
                 <DeliverBoyOrders />
-              </PrivateRoute>
+              </DeliveryBoyRoute>
             }
           />
           <Route
